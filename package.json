@@ -1,0 +1,36 @@
+{
+  "name": "hyper-presence",
+  "version": "1.0.0",
+  "description": "Detect who's actively online using gossip over hypercore-protocol",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RangerMauve/hyper-presence.git"
+  },
+  "keywords": [
+    "hypercore",
+    "protocol",
+    "presence",
+    "online",
+    "graph"
+  ],
+  "author": "rangermauve <ranger@mauve.moe> (https://mauve.moe/)",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/RangerMauve/hyper-presence/issues"
+  },
+  "homepage": "https://github.com/RangerMauve/hyper-presence#readme",
+  "dependencies": {
+    "hyper-flood": "^1.0.1",
+    "jsnetworkx": "^0.3.4"
+  },
+  "devDependencies": {
+    "corestore": "^5.5.0",
+    "corestore-swarm-networking": "^5.5.1",
+    "random-access-memory": "^3.1.1",
+    "tape": "^5.0.1"
+  }
+}
