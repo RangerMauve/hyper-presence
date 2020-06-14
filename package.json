@@ -4,7 +4,8 @@
   "description": "Detect who's actively online using gossip over hypercore-protocol",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test",
+    "build": "protocol-buffers schema.proto -o messages.js"
   },
   "repository": {
     "type": "git",
@@ -24,12 +25,15 @@
   },
   "homepage": "https://github.com/RangerMauve/hyper-presence#readme",
   "dependencies": {
+    "codecs": "^2.1.0",
     "hyper-flood": "^1.0.1",
-    "jsnetworkx": "^0.3.4"
+    "jsnetworkx": "^0.3.4",
+    "protocol-buffers-encodings": "^1.1.0"
   },
   "devDependencies": {
     "corestore": "^5.5.0",
     "corestore-swarm-networking": "^5.5.1",
+    "protocol-buffers": "^4.2.0",
     "random-access-memory": "^3.1.1",
     "tape": "^5.0.1"
   }

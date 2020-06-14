@@ -1,0 +1,19 @@
+enum Type {
+	BOOTSTRAP_REQUEST = 1;
+	BOOTSTRAP_RESPONSE = 2;
+	CONNECTED = 3;
+	DISCONNECTED = 4;
+	STATE = 5;
+}
+
+message Message {
+ required Type type = 0;
+ map<string, State> bootstrap = 1; // For bootstrap events
+ optional bytes data = 2; // For state event
+ optional bytes id = 3; // For connected and disconnected events
+}
+
+message State {
+	repeated bytes connectedTo = 0;
+	optional bytes data = 1;
+}
