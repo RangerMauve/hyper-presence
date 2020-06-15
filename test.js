@@ -20,6 +20,13 @@ test('Basic presence test  / data propogation', (t) => {
 
       p1.on('online', handleOnline)
 
+      p1.on('peer-remove', handleDisconnect)
+
+      const stream1 = feed1.replicate(true)
+      const stream2 = feed2.replicate(false)
+
+      stream1.pipe(stream2).pipe(stream1)
+
       function handleOnline (list) {
         if (list.length === 2) {
           const peerData = p1.getPeerData(p2.id)
@@ -30,18 +37,15 @@ test('Basic presence test  / data propogation', (t) => {
           p1.removeListener('online', handleOnline)
 
           t.deepEqual(p2.data, peerData, 'Got peer data')
-          t.end()
+
+          feed1.close()
         }
       }
 
-      replicate(feed1, feed2)
+      function handleDisconnect () {
+        t.pass('Peer removed on disconnect')
+        t.end()
+      }
     })
   })
 })
-
-function replicate (feed1, feed2) {
-  const stream1 = feed1.replicate(true)
-  const stream2 = feed2.replicate(false)
-
-  stream1.pipe(stream2).pipe(stream1)
-}

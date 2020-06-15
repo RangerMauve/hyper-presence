@@ -138,9 +138,13 @@ module.exports = class Presence extends EventEmitter {
   }
 
   _removePeerConnection (origin, destination) {
-    this._ensurePeer(origin)
-    this._ensurePeer(destination)
-    this.graph.removeEdge(origin.toString('hex'), destination.toString('hex'))
+    try {
+      this._ensurePeer(origin)
+      this._ensurePeer(destination)
+      this.graph.removeEdge(origin.toString('hex'), destination.toString('hex'))
+    } catch (e) {
+      if (e.name !== 'JSNetworkXError') throw e
+    }
   }
 
   _bootstrapFrom (bootstrap) {
