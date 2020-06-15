@@ -22,10 +22,10 @@ test('Basic presence test  / data propogation', (t) => {
 
       function handleOnline (list) {
         if (list.length === 2) {
-          const peerData = p1.getPeer(p2.id)
+          const peerData = p1.getPeerData(p2.id)
           if (!Object.keys(peerData).length) return
 
-					t.pass('Seeing everyone online')
+          t.pass('Seeing everyone online')
 
           p1.removeListener('online', handleOnline)
 
