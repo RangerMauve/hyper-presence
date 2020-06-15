@@ -110,7 +110,7 @@ module.exports = class Presence extends EventEmitter {
         bootstrap
       }), 0)
     } else if (type === Type.BOOTSTRAP_RESPONSE) {
-      const { bootstrap } = message
+      const { bootstrap } = decoded
       this._bootstrapFrom(bootstrap)
     }
   }
@@ -154,7 +154,7 @@ module.exports = class Presence extends EventEmitter {
       const { data, connectedTo } = bootstrap[id]
       const parsedData = data ? this.encoding.decode(data) : null
       if (id === this.id) continue
-      this._removePeer(id)
+      if (this._hasSeenPeer(id)) this._removePeer(id)
       this._setPeer(id, parsedData)
       for (const connection of connectedTo) {
         this._addPeerConnection(id, connection)
