@@ -153,9 +153,15 @@ module.exports = class Presence extends EventEmitter {
     for (const id in bootstrap) {
       const { data, connectedTo } = bootstrap[id]
       const parsedData = data ? this.encoding.decode(data) : null
+      let peerData = parsedData || {}
       if (id === this.id) continue
-      if (this._hasSeenPeer(id)) this._removePeer(id)
-      this._setPeer(id, parsedData)
+      if (this._hasSeenPeer(id)) {
+        // We should try to preserve any existing peer data
+        const existingPeerData = this.getPeerData(id)
+        this._removePeer(id)
+        peerData = { ...existingPeerData, ...peerData }
+      }
+      this._setPeer(id, peerData)
       for (const connection of connectedTo) {
         this._addPeerConnection(id, connection)
       }
