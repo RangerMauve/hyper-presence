@@ -26,11 +26,19 @@ module.exports = class HypercorePresence extends Presence {
 
   handlePeerAdd (peer) {
     const id = peer.remotePublicKey
+    const alreadyConnected = this.feed.peers.find((existing) => {
+      return (existing !== peer) && existing.remotePublicKey.equals(id)
+    })
+    if (alreadyConnected) return
     this.onAddPeer(id)
   }
 
   handlePeerRemove (peer) {
     const id = peer.remotePublicKey
+    const stillConnected = this.feed.peers.find((existing) => {
+      return (existing !== peer) && existing.remotePublicKey.equals(id)
+    })
+    if (stillConnected) return
     this.onRemovePeer(id)
   }
 
