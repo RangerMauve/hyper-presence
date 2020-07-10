@@ -1,6 +1,6 @@
 {
   "name": "hyper-presence",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Detect who's actively online using gossip over hypercore-protocol",
   "main": "index.js",
   "scripts": {
