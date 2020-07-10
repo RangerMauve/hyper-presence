@@ -44,7 +44,10 @@ module.exports = class Presence extends EventEmitter {
   }
 
   onAddPeer (id) {
-    this.connectedTo.add(id.toString('hex'))
+    const stringId = id.toString('hex')
+    if (this.connectedTo.has(stringId)) return // Already know we're connected here
+
+    this.connectedTo.add(stringId)
 
     this._addPeerConnection(this.id, id)
 
@@ -86,7 +89,6 @@ module.exports = class Presence extends EventEmitter {
     const decoded = Message.decode(message)
     const { type } = decoded
     if (!type) throw new Error('Missing Type In Message')
-
     if (type === Type.STATE) {
       const { data: rawData } = decoded
       const data = this.encoding.decode(rawData)

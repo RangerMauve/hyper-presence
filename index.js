@@ -4,6 +4,9 @@ const Presence = require('./Presence')
 
 const DEFAULT_EXTENSION = 'hyper-presence'
 
+// Give half a second to get reconnected when disconnecting before making it final. 😁
+const DISCONNECT_SMOOTH = 500
+
 module.exports = class HypercorePresence extends Presence {
   constructor (feed, { id, extension = DEFAULT_EXTENSION, data = {}, ...opts } = {}) {
     if (!id && feed.noiseKeyPair) id = feed.noiseKeyPair.publicKey
@@ -22,24 +25,29 @@ module.exports = class HypercorePresence extends Presence {
     flood.on('message', (message, id) => this.onGetBroadcast(message, id))
 
     this.setData(data)
+
+    if (feed.peers && feed.peers.length) {
+      for (const peer of feed.peers) {
+        this.handlePeerAdd(peer)
+      }
+    }
   }
 
   handlePeerAdd (peer) {
     const id = peer.remotePublicKey
-    const alreadyConnected = this.feed.peers.find((existing) => {
-      return (existing !== peer) && existing.remotePublicKey.equals(id)
-    })
-    if (alreadyConnected) return
     this.onAddPeer(id)
   }
 
   handlePeerRemove (peer) {
     const id = peer.remotePublicKey
-    const stillConnected = this.feed.peers.find((existing) => {
-      return (existing !== peer) && existing.remotePublicKey.equals(id)
-    })
-    if (stillConnected) return
-    this.onRemovePeer(id)
+    // Wait for a bit and check if we're still disconnected before removing the peer
+    setTimeout(() => {
+      const stillConnected = this.feed.peers.find((existing) => {
+        return (existing !== peer) && existing.remotePublicKey.equals(id)
+      })
+      if (stillConnected) return
+      this.onRemovePeer(id)
+    }, DISCONNECT_SMOOTH)
   }
 
   broadcast (message, ttl) {
