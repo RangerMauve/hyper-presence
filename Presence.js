@@ -157,11 +157,19 @@ module.exports = class Presence extends EventEmitter {
       const parsedData = data ? this.encoding.decode(data) : null
       let peerData = parsedData || {}
       if (id === this.id) continue
+      // If we're already tracking them
       if (this._hasSeenPeer(id)) {
-        // We should try to preserve any existing peer data
+        // See what data we already have for them
+        // Add their existing data to what we got from the bootstrap
         const existingPeerData = this.getPeerData(id)
-        this._removePeer(id)
         peerData = { ...existingPeerData, ...peerData }
+
+        // See who we _think_ they're connected to
+        // Remove all the existing connections to make way for the bootstrap
+        const successors = this._getPeerConnectedTo(id)
+        for (const successor of successors) {
+          this._removePeerConnection(id, successor)
+        }
       }
       this._setPeer(id, peerData)
       for (const connection of connectedTo) {
@@ -172,6 +180,10 @@ module.exports = class Presence extends EventEmitter {
     this.emit('bootstrapped')
 
     this._recalculate()
+  }
+
+  _getPeerConnectedTo (id) {
+    return this.graph.successors(id)
   }
 
   _getBootstrapInfo () {
