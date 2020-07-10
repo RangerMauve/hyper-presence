@@ -163,13 +163,6 @@ module.exports = class Presence extends EventEmitter {
         // Add their existing data to what we got from the bootstrap
         const existingPeerData = this.getPeerData(id)
         peerData = { ...existingPeerData, ...peerData }
-
-        // See who we _think_ they're connected to
-        // Remove all the existing connections to make way for the bootstrap
-        const successors = this._getPeerConnectedTo(id)
-        for (const successor of successors) {
-          this._removePeerConnection(id, successor)
-        }
       }
       this._setPeer(id, peerData)
       for (const connection of connectedTo) {
